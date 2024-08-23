@@ -52,6 +52,7 @@ Route::get('/kegiatan', App\Livewire\Guest\Kegiatan\index::class)->name('kegiata
 Route::get('/dokumens', App\Livewire\Guest\Dokumen\index::class)->name('dokumen.index');
 Route::get('/ikkp', App\Livewire\Guest\Ikkp\index::class)->name('ikkp.index');
 Route::get('/sp2kp', App\Livewire\Guest\Sp2kp\index::class)->name('sp2kp.index');
+Route::get('/komoditas', App\Livewire\Guest\Komoditas\index::class)->name('komoditas.index');
 
 
 Route::get('/logout', [Logout::class, 'logout'])->name('logout');

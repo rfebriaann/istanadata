@@ -1,5 +1,5 @@
 <section class="p-3 mt-0 fixed w-full px-0 left-0 z-10 top-0 mx-auto">
-    <nav class="bg-[#0166FE] z-10 sm-l:bg-red-500 xl:px-2 mx-20 sm:w-[370px] sm:mx-auto lg:w-[900px] lg:mx-auto md:w-[730px] xl:w-[1280px] xl:mx-20 md:rounded-full border-2 sm:rounded-3xl shadow-lg">
+    <nav class="bg-[#0166FE] z-10 sm-l:bg-red-500 xl:px-2 mx-20 sm:w-[370px] sm:mx-auto lg:w-[900px] lg:mx-auto md:w-[730px] xl:w-auto xl:mx-20 md:rounded-full border-2 sm:rounded-3xl shadow-lg">
         <div class="xl:max-w-screen-xl lg:max-w-screen-lg  sm:max-w-screen-sm md:max-w-screen-md sm-l:max-w-screen-sm-l sm:mx-2 lg:mx-10 flex mx-10 flex-wrap items-center justify-between p-4">
         <a href="{{route('home')}}" class="flex items-center">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Lambang_Kabupaten_Siak.png/800px-Lambang_Kabupaten_Siak.png" class="h-10 mr-3" alt="Flowbite Logo" />

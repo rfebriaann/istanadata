@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Guest\Komoditas;
 
+use App\Http\Resources\RiwayatKomoditas;
 use App\Models\JenisKomoditas;
 use App\Models\Kecamatan;
+use App\Models\Komoditas;
 use App\Models\RiwayatHargaKomoditas;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,9 +16,14 @@ class Index extends Component
     use WithPagination;
     public $data;
     public $dataArray = [];
+    // public $kecamatanId = 1;
+    public $kecamatanId = 1;
+    public $kecamatanList = [];
+    
 
     public function mount()
     {
+        $this->kecamatanList = Kecamatan::all(); 
         $datas = RiwayatHargaKomoditas::with(['komoditas.jenisKomoditass', 'kecamatan', 'satuanKomoditas'])->get();
         $selisih = 0;
         foreach ($datas as $data) {
@@ -42,13 +50,27 @@ class Index extends Component
                 'verifikasi' => $data->verifikasi,
             ];
         }
+    }
 
+    public function updatedKecamatanId($value)
+    {
+        $this->kecamatanId = $value;
     }
 
     public function render()
     {
         return view('livewire.guest.komoditas.index', [
-            'item' => $this->dataArray,
+            'items' => RiwayatHargaKomoditas::with(['komoditas.jenisKomoditass', 'kecamatan', 'satuanKomoditas'])
+            ->from('kis_riwayatharga_komoditas as rhk')
+            ->joinSub(
+                RiwayatHargaKomoditas::select('komoditas_id', DB::raw('MAX(id) as latest_id'))
+                    ->where('kecamatan_id', $this->kecamatanId)
+                    ->groupBy('komoditas_id'), 
+                'latest_riwayat', 
+                fn($join) => $join->on('rhk.id', '=', 'latest_riwayat.latest_id')
+            )
+            ->get(),
+            // 'kecamatans' => Kecamatan::all()
         ]);
     }
 }

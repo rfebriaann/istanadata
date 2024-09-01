@@ -20,4 +20,9 @@ class Komoditas extends Model
         return $this->hasMany(JenisKomoditas::class, 'komoditas_id');
     }
 
+    public function satuan()
+    {
+        return $this->belongsTo(SatuanKomoditas::class);
+    }
+
 }

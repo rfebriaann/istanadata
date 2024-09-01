@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\RiwayatKomoditasController;
+use App\Http\Controllers\Api\FsvaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -12,3 +13,6 @@ Route::apiResource('/dokumens', App\Http\Controllers\Api\DokumenController::clas
 
 Route::get('/riwayat', [RiwayatKomoditasController::class, 'index']);
 Route::get('/riwayat/{id}', [RiwayatKomoditasController::class, 'show']);
+
+Route::get('/fsva', [FsvaController::class, 'index']);
+Route::get('/fsva/{id}', [FsvaController::class, 'show']);

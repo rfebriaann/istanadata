@@ -8,7 +8,7 @@
                 <div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
                     <div class="flex items-center justify-between d p-4">
                         <div class="flex">
-                            <div class="relative w-full">
+                            {{-- <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
                                         fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -18,10 +18,10 @@
                                     </svg>
                                 </div>
                                 <input  type="text"
-                                    wire:model.live = 'search'
+                                    wire:model.debounce.300ms="search"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 "
                                     placeholder="Search" required="">
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="flex space-x-3">
                             <div class="flex space-x-3 items-center">
@@ -29,7 +29,7 @@
                                 <select 
                                 wire:model.live = 'kecamatanId'
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
-                                    @foreach($kecamatanList as $kecamatan)
+                                    @foreach($kecamatans as $kecamatan)
                                         <option value="{{ $kecamatan->id }}">{{ $kecamatan->kecamatan }}</option>
                                     @endforeach
                                 </select>
@@ -44,26 +44,8 @@
                                     <th scope="col" class="px-4 py-3">Komoditas</th>
                                     <th scope="col" class="px-4 py-3">Satuan</th>
                                     <th scope="col" class="px-4 py-3">Harga</th>
-                                    {{-- <th scope="col" class="px-4 py-3">Role</th>
-                                    <th scope="col" class="px-4 py-3">Joined</th>
-                                    <th scope="col" class="px-4 py-3">Last update</th> --}}
-                                    {{-- <th scope="col" class="px-4 py-3">
-                                        <span class="sr-only">Actions</span>
-                                    </th> --}}
                                 </tr>
                             </thead>
-                            {{-- <tbody>
-                                @php
-                                    $i = 1;
-                                @endphp
-                                @foreach ($items as $item)
-                                <tr class="border-b dark:border-gray-200">
-                                        <td class="px-4 py-3">{{$i++}}</td>
-                                        <th scope="row" class="px-6 text-left py-2 font-medium text-gray-900">{{ucwords(strtolower($item->komoditas))}}</th>
-                                        <td class="px-4 py-3 text-blue-500"><span class="bg-[#0365FE]/20 text-sm leading-8 text-[#0365FE] font-medium p-1 rounded-2xl px-4">{{$item->satuan->satuan}}</span></td>
-                                </tr>
-                                @endforeach
-                            </tbody> --}}
                             <tbody>
                                 @php
                                     $i = 1;
@@ -73,7 +55,7 @@
                                         <td class="px-4 py-3">{{$i++}}</td>
                                         <th scope="row" class="px-6 text-left py-2 font-medium text-gray-900">{{ucwords(strtolower($item->komoditas->komoditas))}}</th>
                                         <th scope="row" class="px-6 text-left py-2 font-medium text-gray-900">{{ $item->satuanKomoditas->satuan }}</th>
-                                        <th scope="row" class="px-6 text-left py-2 font-medium text-gray-900">{{ $item->harga_baru ?? "null" }}</th>
+                                        <th scope="row" class="px-6 text-left py-2 font-medium text-gray-900">Rp{{ number_format($item->harga_baru, 0, ',', '.') }}</th>
                                         {{-- <td class="px-4 py-3 text-blue-500"><span class="bg-[#0365FE]/20 text-sm leading-8 text-[#0365FE] font-medium p-1 rounded-2xl px-4">{{$item->satuan->satuan}}</span></td> --}}
                                 </tr>
                                 @endforeach
@@ -94,42 +76,10 @@
                                 </select>
                             </div>
                         </div>
-                        {{-- {{$opds->links()}} --}}
+                        {{$items->links()}}
                     </div>
                 </div>
             </div>
-           {{-- @dd($item[1]) --}}
-            {{-- @foreach($item as $data)
-                <p>ID: {{$data->id}}</p>
-                <p>Komoditas: {{ $data->komoditas->komoditas }}</p>
-                    @if($data->komoditas->jenisKomoditass->isNotEmpty())
-                        @foreach($data->komoditas->jenisKomoditass as $jenisKomoditas)
-                            <p>Jenis Komoditas: {{ $jenisKomoditas->jenis_komoditas }}</p>
-                            
-                        @endforeach
-                    @else
-                        <p>Tidak ada jenis komoditas terkait.</p>
-                        <br>
-                    @endif
-
-                    @if($data->kecamatan)
-                        <p>Kecamatan: {{ $data->kecamatan->kecamatan }}</p> <!-- Asumsikan nama kecamatan berada di kolom 'nama' -->
-                    @else
-                        <p>Kecamatan tidak tersedia.</p>
-                    @endif
-                   
-                <p>Harga Baru: {{ $data->harga_baru }}</p>
-                <p>Harga Lama: {{ $data->harga_lama }}</p>
-                <p>Selisih Harga: {{ $data->harga_baru - $data->harga_lama}}</p>
-                <p>Tanggal: {{ $data->tanggal }}</p>
-
-                    @if($data->satuanKomoditas)
-                        <p>Satuan: {{ $data->satuanKomoditas->satuan }}</p> <!-- Asumsikan nama kecamatan berada di kolom 'nama' -->
-                    @else
-                        <p>Kecamatan tidak tersedia.</p>
-                    @endif
-                <br>
-            @endforeach --}}
         </section>
     </div>
 </div>

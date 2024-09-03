@@ -38,6 +38,9 @@
                         <li>
                         <a href="{{route('kegiatan.index')}}" class="block px-4 py-2 hover:bg-[#0365FE] text-white">Kegiatan</a>
                         </li>
+                        <li>
+                        <a href="{{route('komoditas.index')}}" class="block px-4 py-2 hover:bg-[#0365FE] text-white">Komoditas</a>
+                        </li>
                     </ul>
                 </div>
                 {{-- <x-nav-link href="/create">Tambah Dokumen</x-nav-link> --}}

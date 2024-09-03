@@ -41,6 +41,9 @@
                         <li>
                         <a href="{{route('komoditas.index')}}" class="block px-4 py-2 hover:bg-[#0365FE] text-white">Komoditas</a>
                         </li>
+                        <li>
+                        <a href="{{route('rumahibadah.index')}}" class="block px-4 py-2 hover:bg-[#0365FE] text-white">Rumah Ibadah</a>
+                        </li>
                     </ul>
                 </div>
                 {{-- <x-nav-link href="/create">Tambah Dokumen</x-nav-link> --}}

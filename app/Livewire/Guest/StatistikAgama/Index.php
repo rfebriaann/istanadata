@@ -8,7 +8,6 @@ class Index extends Component
 {
     public function render()
     {
-        // dd(Religion::all());
         return view('livewire.guest.statistik-agama.index', [
             'religions' => Religion::all()
         ]);

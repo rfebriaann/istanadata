@@ -53,7 +53,7 @@ Route::get('/dokumens', App\Livewire\Guest\Dokumen\index::class)->name('dokumen.
 Route::get('/ikkp', App\Livewire\Guest\Ikkp\index::class)->name('ikkp.index');
 Route::get('/sp2kp', App\Livewire\Guest\Sp2kp\index::class)->name('sp2kp.index');
 Route::get('/komoditas', App\Livewire\Guest\Komoditas\index::class)->name('komoditas.index');
-Route::get('/statistikAgama', App\Livewire\Guest\StatistikAgama\index::class)->name('statistikAgama.index');
+Route::get('/rumahibadah', App\Livewire\Guest\StatistikAgama\Index::class)->name('rumahibadah.index');
 
 
 Route::get('/logout', [Logout::class, 'logout'])->name('logout');

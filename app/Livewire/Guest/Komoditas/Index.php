@@ -14,6 +14,7 @@ class Index extends Component
     use WithPagination;
     public $perPage = 15;
     public $kecamatanId = 1;
+    public $start_date;
 
     public function render()
     {
@@ -23,12 +24,16 @@ class Index extends Component
             ->joinSub(
                 RiwayatHargaKomoditas::select('komoditas_id', DB::raw('MAX(id) as latest_id'))
                     ->where('kecamatan_id', $this->kecamatanId)
-                    ->groupBy('komoditas_id'), 
-                'latest_riwayat', 
-                function($join) { // Gunakan function closure
-        $join->on('rhk.id', '=', 'latest_riwayat.latest_id');
-    }
-            )->paginate($this->perPage),
+                    ->when($this->start_date, function ($query) {
+                        $query->whereDate('tanggal', '>=', $this->start_date); // Apply date filter
+                    })
+                    ->groupBy('komoditas_id'),
+                'latest_riwayat',
+                function($join) {
+                    $join->on('rhk.id', '=', 'latest_riwayat.latest_id');
+                }
+            )
+            ->paginate($this->perPage),
             'kecamatans' => Kecamatan::all()
         ]);
     }

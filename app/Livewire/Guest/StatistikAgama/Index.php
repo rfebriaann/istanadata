@@ -22,7 +22,7 @@ class Index extends Component
         $this->kampungs = Religion::distinct()->pluck('kampung'); // Ambil semua kampung yang unik dari tabel statistik
         $this->filterBulan = now()->format('m');
         $this->filterKampung = null;
-        $this->filterKecamatan = null;
+        $this->filterKecamatan = 'Siak';
     }
 
     public function render()
@@ -115,7 +115,6 @@ class Index extends Component
     public function updatedFilterKecamatan()
     {
         // Update data saat filterKecamatan berubah
-        // $this->emit('updatedStatistikPerKampung', $this->getStatistikPerKampung());
         $this->dispatch('updatedStatistikPerKampung', detail: [
             'data' => $this->getStatistikPerKampung()
         ]);

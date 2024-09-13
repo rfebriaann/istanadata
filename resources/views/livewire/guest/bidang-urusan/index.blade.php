@@ -1,9 +1,7 @@
 <div>
-    {{-- <div class="h-auto mb-[70px] md:mx-24 flex justify-center bg-[#000] rounded-3xl mt-28"> --}}
-        <div class="h-auto w-auto mx-20 sm:w-[320px] sm:mx-auto md:w-[680px] md:mx-auto xl:w-[1200px] lg:w-[800px] lg:mx-auto rounded-2xl bg-[#FAFAFA] mt-28 p-10 sm:p-2">
-            <section class="">
-                <div class="xl:max-w-screen-xl lg:max-w-screen-lg p-2 mx-auto lg:px-10">
-                    <!-- Start coding here -->
+    <div class="h-auto w-auto sm:mx-0 mx-10 sm:w-max-w-screen-sm  md:w-max-w-screen-md md:mx-auto xl:w-max-w-screen-xl xl:mx-40 lg:w-max-w-screen-lg lg:mx-auto rounded-2xl bg-[#FAFAFA] mt-28 p-10 sm:p-2">
+        <section class="">
+            <div class="xl:max-w-screen-xl lg:max-w-screen-lg p-2 mx-auto ">
                     <h1 class="text-3xl py-2 font-bold text-black/80">Data Bidang Urusan</h1>
                     <div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
                         <div class="flex items-center justify-between d p-4">

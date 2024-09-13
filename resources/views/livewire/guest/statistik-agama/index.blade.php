@@ -1,26 +1,19 @@
 <div>
-    {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
-    <div class="h-auto w-auto mx-20 sm:w-[320px] sm:mx-auto md:w-[680px] md:mx-auto xl:w-[1200px] lg:w-[800px] lg:mx-auto rounded-2xl bg-[#FAFAFA] mt-28 p-10 sm:p-2">
+    <div class="h-auto w-auto sm:mx-0 mx-10 sm:w-max-w-screen-sm  md:w-max-w-screen-md md:mx-auto xl:w-max-w-screen-xl xl:mx-40 lg:w-max-w-screen-lg lg:mx-auto rounded-2xl bg-[#FAFAFA] mt-28 p-10 sm:p-2">
         <section class="">
-            {{-- @dd($items) --}}
-            <div class="xl:max-w-screen-xl lg:max-w-screen-lg p-2 mx-auto lg:px-10">
-                <!-- Start coding here -->
+            <div class="xl:max-w-screen-xl lg:max-w-screen-lg p-2 mx-auto ">
                 <h1 class="text-3xl py-2 font-bold text-black/80">Statistik Rumah Ibadah</h1>
                 <div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
-                    <div wire:ignore  class="flex flex-wrap p-10">
-                        <div class="flex flex-col md:flex-row gap-4">
-                            <div class="flex-1">
+                        <div class="flex flex-col p-10">
+                            <div class="">
                                 <div class="py-4">
                                     <h1 class="text-xl font-bold text-black/80">Statistik Rumah Ibadah Per Kecamatan</h1>
                                     <p class="text-sm mx-1 font-normal text-gray-900">Klik bar dibawah jikalau ingin menghilangkan data yang tidak diinginkan</p>
                                 </div>
                                 <canvas id="statistikChart"></canvas>
                             </div>
-                            <div class="flex-1">
-                                <div class="py-4">
-                                    <h1 class="text-xl font-bold text-black/80">Statistik Rumah Ibadah Per Kampung</h1>
-                                    <p class="text-sm mx-1 font-normal text-gray-900">Klik bar dibawah jikalau ingin menghilangkan data yang tidak diinginkan</p>
-                                </div>
+                            <div class="mt-10">
+                                
                                 {{-- <div class="mb-4">
                                     <label for="bulan">Pilih Bulan:</label>
                                     <select wire:model.live="filterBulan" id="bulan">
@@ -30,19 +23,29 @@
                                     </select>
                                 </div> --}}
                                 
-                                <div class="mb-4">
-                                    <label for="kampung">Pilih Kampung:</label>
-                                    <select wire:model.live="filterKecamatan"  id="kecamatan">
-                                        <option value="">Semua Kecamatan</option>
-                                        @foreach($kecamatanss as $kecamatan)
-                                            <option value="{{ $kecamatan }}">{{ $kecamatan }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="flex space-x-3 justify-between">
+                                    <div class="py-4">
+                                        <h1 class="text-xl font-bold text-black/80">Statistik Rumah Ibadah Per Kampung</h1>
+                                        <p class="text-sm mx-1 font-normal text-gray-900">Klik bar dibawah jikalau ingin menghilangkan data yang tidak diinginkan</p>
+                                    </div>
+                                    <div class="flex space-x-3 items-center">
+                                        <label class="w-40 text-sm font-medium text-gray-900" for="kampung">Pilih Kecamatan:</label>
+                                        <select wire:model.live="filterKecamatan"  id="kecamatan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "> 
+                                            @foreach($kecamatanss as $kecamatan)
+                                                <option value="{{ $kecamatan }}">{{ $kecamatan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                                 <canvas id="statistikPerKampungChart"></canvas>
                             </div>
+                        </div>                  
+                    <div class="flex items-center justify-between d mx-10">
+                        <div class="py-4">
+                            <h1 class="text-xl font-bold text-black/80">Detail Data Desa Cantik</h1>
+                            <p class="text-sm mx-1 font-normal text-gray-900">Klik buttoon dibawah jikalau ingin filtering data yang diinginkan</p>
                         </div>
-                    </div>                    
+                    </div>
                     <div class="flex items-center justify-between d p-4">
                         <div class="flex">
                             <div class="relative w-full">
@@ -146,6 +149,7 @@
         var statistikChart;
     
         function renderChart(data) {
+            
             var kecamatan = Object.keys(data); // Nama kecamatan
             var totalMesjid = kecamatan.map(k => data[k].total_mesjid);
             var totalGerejaKristen = kecamatan.map(k => data[k].total_gereja_kristen);
@@ -172,70 +176,70 @@
                             data: totalMesjid,
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         },
                         {
                             label: 'Gereja Kristen',
                             data: totalGerejaKristen,
                             backgroundColor: 'rgba(255, 99, 132, 0.2)',
                             borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         },
                         {
                             label: 'Gereja Khatolik',
                             data: totalGerejaKhatolik,
                             backgroundColor: 'rgba(255, 39, 82, 0.2)',
                             borderColor: 'rgba(255, 39, 82, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         },
                         {
                             label: 'Pura',
                             data: totalPura,
                             backgroundColor: 'rgba(255, 205, 86, 0.2)',
                             borderColor: 'rgba(255, 205, 86, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         },
                         {
                             label: 'Wihara',
                             data: totalWihara,
                             backgroundColor: 'rgba(201, 203, 207, 0.2)',
                             borderColor: 'rgba(201, 203, 207, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         },
                         {
                             label: 'Klenteng',
                             data: totalKlenteng,
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
                             borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         },
                         {
                             label: 'Rumah Tahfiz',
                             data: totalRumahTahfiz,
                             backgroundColor: 'rgba(153, 102, 255, 0.2)',
                             borderColor: 'rgba(153, 102, 255, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         },
                         {
                             label: 'Kapel',
                             data: totalKapel,
                             backgroundColor: 'rgba(113, 82, 155, 0.2)',
                             borderColor: 'rgba(113, 82, 155, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         },
                         {
                             label: 'Balai Basarah',
                             data: totalBalaiBasarah,
                             backgroundColor: 'rgba(83, 182, 155, 0.2)',
                             borderColor: 'rgba(83, 182, 155, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         },
                         {
                             label: 'Surau',
                             data: totalSurau,
                             backgroundColor: 'rgba(283, 92, 155, 0.2)',
                             borderColor: 'rgba(283, 92, 155, 1)',
-                            borderWidth: 1
+                            borderWidth: 2
                         }
                     ]
                 },
@@ -289,70 +293,70 @@
                                 data: totalMesjid,
                                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                 borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1
+                                borderWidth: 2
                             },
                             {
                                 label: 'Gereja Kristen',
                                 data: totalGerejaKristen,
                                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                                 borderColor: 'rgba(255, 99, 132, 1)',
-                                borderWidth: 1
+                                borderWidth: 2
                             },
                             {
                                 label: 'Gereja Khatolik',
                                 data: totalGerejaKhatolik,
                                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                 borderColor: 'rgba(54, 162, 235, 1)',
-                                borderWidth: 1
+                                borderWidth: 2
                             },
                             {
                                 label: 'Pura',
                                 data: totalPura,
                                 backgroundColor: 'rgba(255, 205, 86, 0.2)',
                                 borderColor: 'rgba(255, 205, 86, 1)',
-                                borderWidth: 1
+                                borderWidth: 2
                             },
                             {
                                 label: 'Wihara',
                                 data: totalWihara,
                                 backgroundColor: 'rgba(201, 203, 207, 0.2)',
                                 borderColor: 'rgba(201, 203, 207, 1)',
-                                borderWidth: 1
+                                borderWidth: 2
                             },
                             {
                                 label: 'Klenteng',
                                 data: totalKlenteng,
                                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                                 borderColor: 'rgba(153, 102, 255, 1)',
-                                borderWidth: 1
+                                borderWidth: 2
                             },
                             {
                                 label: 'Rumah Tahfiz',
                                 data: totalRumahTahfiz,
                                 backgroundColor: 'rgba(255, 159, 64, 0.2)',
                                 borderColor: 'rgba(255, 159, 64, 1)',
-                                borderWidth: 1
+                                borderWidth: 2
                             },
                             {
                                 label: 'Kapel',
                                 data: totalKapel,
                                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                                 borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1
+                                borderWidth: 2
                             },
                             {
                                 label: 'Balai Basarah',
                                 data: totalBalaiBasarah,
                                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                                 borderColor: 'rgba(153, 102, 255, 1)',
-                                borderWidth: 1
+                                borderWidth: 2
                             },
                             {
                                 label: 'Surau',
                                 data: totalSurau,
                                 backgroundColor: 'rgba(201, 203, 207, 0.2)',
                                 borderColor: 'rgba(201, 203, 207, 1)',
-                                borderWidth: 1
+                                borderWidth: 2
                             }
                         ]
                     },
@@ -371,8 +375,8 @@
     
             // Update chart setiap kali bulan atau kecamatan diubah
             Livewire.on('updatedStatistikPerKampung', (data) => {
-                console.log('Data diterima:', data);
-                renderChart(data);
+                console.log('Data diterima:', data.detail.data);
+                renderChart(data.detail.data);
             });
             // window.addEventListener('updatedStatistikPerKampung', event => {
             //     console.log('Data diterima:', event.detail.data);

@@ -7,8 +7,41 @@
                 <!-- Start coding here -->
                 <h1 class="text-3xl py-2 font-bold text-black/80">Statistik Rumah Ibadah</h1>
                 <div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
-                    <div wire:ignore  class="flex flex-wrap p-12">
-                        <canvas id="statistikChart"></canvas>
+                    <div wire:ignore  class="flex flex-wrap p-10">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1">
+                                <div class="py-4">
+                                    <h1 class="text-xl font-bold text-black/80">Statistik Rumah Ibadah Per Kecamatan</h1>
+                                    <p class="text-sm mx-1 font-normal text-gray-900">Klik bar dibawah jikalau ingin menghilangkan data yang tidak diinginkan</p>
+                                </div>
+                                <canvas id="statistikChart"></canvas>
+                            </div>
+                            <div class="flex-1">
+                                <div class="py-4">
+                                    <h1 class="text-xl font-bold text-black/80">Statistik Rumah Ibadah Per Kampung</h1>
+                                    <p class="text-sm mx-1 font-normal text-gray-900">Klik bar dibawah jikalau ingin menghilangkan data yang tidak diinginkan</p>
+                                </div>
+                                {{-- <div class="mb-4">
+                                    <label for="bulan">Pilih Bulan:</label>
+                                    <select wire:model.live="filterBulan" id="bulan">
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <option value="{{ sprintf('%02d', $i) }}">{{ date("F", mktime(0, 0, 0, $i, 1)) }}</option>
+                                        @endfor
+                                    </select>
+                                </div> --}}
+                                
+                                <div class="mb-4">
+                                    <label for="kampung">Pilih Kampung:</label>
+                                    <select wire:model.live="filterKecamatan"  id="kecamatan">
+                                        <option value="">Semua Kecamatan</option>
+                                        @foreach($kecamatanss as $kecamatan)
+                                            <option value="{{ $kecamatan }}">{{ $kecamatan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <canvas id="statistikPerKampungChart"></canvas>
+                            </div>
+                        </div>
                     </div>                    
                     <div class="flex items-center justify-between d p-4">
                         <div class="flex">
@@ -224,34 +257,156 @@
             renderChart(data);
         });
     </script>
-    {{-- <script>
-        document.addEventListener('livewire:load', function () {
-            var ctx = document.getElementById('statistikChart').getContext('2d');
-            var statistikChart;
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('statistikPerKampungChart').getContext('2d');
+            var statistikPerKampungChart;
     
             function renderChart(data) {
-                var kecamatan = Object.keys(data); // Nama kecamatan
-            var totalMesjid = kecamatan.map(k => data[k].total_mesjid);
-            var totalGerejaKristen = kecamatan.map(k => data[k].total_gereja_kristen);
-            var totalGerejaKhatolik = kecamatan.map(k => data[k].total_gereja_khatolik);
-            var totalPura = kecamatan.map(k => data[k].total_pura);
-            var totalWihara = kecamatan.map(k => data[k].total_wihara);
-            var totalKlenteng = kecamatan.map(k => data[k].total_klenteng);
-            var totalRumahTahfiz = kecamatan.map(k => data[k].total_rumah_tahfiz);
-            var totalKapel= kecamatan.map(k => data[k].total_kapel);
-            var totalBalaiBasarah= kecamatan.map(k => data[k].total_balai_basarah);
-            var totalSurau= kecamatan.map(k => data[k].total_surau);
+                var kampungs = Object.keys(data); // Nama kampung
+                var totalMesjid = kampungs.map(k => data[k].total_mesjid);
+                var totalGerejaKristen = kampungs.map(k => data[k].total_gereja_kristen);
+                var totalGerejaKhatolik = kampungs.map(k => data[k].total_gereja_khatolik);
+                var totalPura = kampungs.map(k => data[k].total_pura);
+                var totalWihara = kampungs.map(k => data[k].total_wihara);
+                var totalKlenteng = kampungs.map(k => data[k].total_klenteng);
+                var totalRumahTahfiz = kampungs.map(k => data[k].total_rumah_tahfiz);
+                var totalKapel = kampungs.map(k => data[k].total_kapel);
+                var totalBalaiBasarah = kampungs.map(k => data[k].total_balai_basarah);
+                var totalSurau = kampungs.map(k => data[k].total_surau);
     
-                if (statistikChart) {
-                    statistikChart.destroy(); // Hapus chart lama sebelum render ulang
+                if (statistikPerKampungChart) {
+                    statistikPerKampungChart.destroy(); // Hapus chart lama sebelum render ulang
                 }
     
-                statistikChart = new Chart(ctx, {
+                statistikPerKampungChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: kecamatan,
+                        labels: kampungs,
                         datasets: [
                             {
+                                label: 'Masjid',
+                                data: totalMesjid,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Gereja Kristen',
+                                data: totalGerejaKristen,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Gereja Khatolik',
+                                data: totalGerejaKhatolik,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Pura',
+                                data: totalPura,
+                                backgroundColor: 'rgba(255, 205, 86, 0.2)',
+                                borderColor: 'rgba(255, 205, 86, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Wihara',
+                                data: totalWihara,
+                                backgroundColor: 'rgba(201, 203, 207, 0.2)',
+                                borderColor: 'rgba(201, 203, 207, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Klenteng',
+                                data: totalKlenteng,
+                                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Rumah Tahfiz',
+                                data: totalRumahTahfiz,
+                                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                                borderColor: 'rgba(255, 159, 64, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Kapel',
+                                data: totalKapel,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Balai Basarah',
+                                data: totalBalaiBasarah,
+                                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Surau',
+                                data: totalSurau,
+                                backgroundColor: 'rgba(201, 203, 207, 0.2)',
+                                borderColor: 'rgba(201, 203, 207, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+    
+            // Render chart pertama kali dengan data dari backend
+            renderChart(@json($statistikPerKampung->toArray()));
+    
+            // Update chart setiap kali bulan atau kecamatan diubah
+            Livewire.on('updatedStatistikPerKampung', (data) => {
+                console.log('Data diterima:', data);
+                renderChart(data);
+            });
+            // window.addEventListener('updatedStatistikPerKampung', event => {
+            //     console.log('Data diterima:', event.detail.data);
+            //     renderChart(event.detail.data);
+            // });
+        });
+    </script>
+    {{-- <script>
+        var ctx = document.getElementById('statistikPerKampungChart').getContext('2d');
+        var statistikPerKampungChart;
+    
+        function renderChart(data) {
+            var kampungs = Object.keys(data); // Nama kampung
+            var totalMesjid = kampungs.map(k => data[k].total_mesjid);
+            var totalGerejaKristen = kampungs.map(k => data[k].total_gereja_kristen);
+            var totalGerejaKhatolik = kampungs.map(k => data[k].total_gereja_khatolik);
+            var totalPura = kampungs.map(k => data[k].total_pura);
+            var totalWihara = kampungs.map(k => data[k].total_wihara);
+            var totalKlenteng = kampungs.map(k => data[k].total_klenteng);
+            var totalRumahTahfiz = kampungs.map(k => data[k].total_rumah_tahfiz);
+            var totalKapel = kampungs.map(k => data[k].total_kapel);
+            var totalBalaiBasarah = kampungs.map(k => data[k].total_balai_basarah);
+            var totalSurau = kampungs.map(k => data[k].total_surau);
+    
+            if (statistikPerKampungChart) {
+                statistikPerKampungChart.destroy(); // Hapus chart lama sebelum render ulang
+            }
+    
+            statistikPerKampungChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: kampungs,
+                    datasets: [
+                        {
                             label: 'Masjid',
                             data: totalMesjid,
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -268,8 +423,8 @@
                         {
                             label: 'Gereja Khatolik',
                             data: totalGerejaKhatolik,
-                            backgroundColor: 'rgba(255, 39, 82, 0.2)',
-                            borderColor: 'rgba(255, 39, 82, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
                             borderWidth: 1
                         },
                         {
@@ -289,57 +444,56 @@
                         {
                             label: 'Klenteng',
                             data: totalKlenteng,
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Rumah Tahfiz',
-                            data: totalRumahTahfiz,
                             backgroundColor: 'rgba(153, 102, 255, 0.2)',
                             borderColor: 'rgba(153, 102, 255, 1)',
                             borderWidth: 1
                         },
                         {
+                            label: 'Rumah Tahfiz',
+                            data: totalRumahTahfiz,
+                            backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            borderWidth: 1
+                        },
+                        {
                             label: 'Kapel',
                             data: totalKapel,
-                            backgroundColor: 'rgba(113, 82, 155, 0.2)',
-                            borderColor: 'rgba(113, 82, 155, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
                             borderWidth: 1
                         },
                         {
                             label: 'Balai Basarah',
                             data: totalBalaiBasarah,
-                            backgroundColor: 'rgba(83, 182, 155, 0.2)',
-                            borderColor: 'rgba(83, 182, 155, 1)',
+                            backgroundColor: 'rgba(255, 205, 86, 0.2)',
+                            borderColor: 'rgba(255, 205, 86, 1)',
                             borderWidth: 1
                         },
                         {
                             label: 'Surau',
                             data: totalSurau,
-                            backgroundColor: 'rgba(283, 92, 155, 0.2)',
-                            borderColor: 'rgba(283, 92, 155, 1)',
+                            backgroundColor: 'rgba(201, 203, 207, 0.2)',
+                            borderColor: 'rgba(201, 203, 207, 1)',
                             borderWidth: 1
                         }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
                     }
-                });
-            }
-    
-            // Render chart pertama kali dengan data dari backend
-            renderChart(@json($statistikPerKecamatan->toArray()));
-    
-            // Update chart setiap kali bulan atau kampung diubah
-            Livewire.on('updatedStatistikPerKecamatan', data => {
-                renderChart(data);
+                }
             });
+        }
+    
+        // Render chart pertama kali dengan data dari backend
+        renderChart(@json($statistikPerKampung->toArray()));
+    
+        // Update chart setiap kali bulan atau kecamatan diubah
+        Livewire.on('updatedStatistikPerKampung', data => {
+            renderChart(data);
         });
     </script> --}}
 </div>

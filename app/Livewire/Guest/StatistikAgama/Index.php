@@ -15,16 +15,19 @@ class Index extends Component
     public $filterBulan;
     public $filterKampung;
     public $kampungs;
+    public $filterKecamatan;
 
     public function mount()
     {
         $this->kampungs = Religion::distinct()->pluck('kampung'); // Ambil semua kampung yang unik dari tabel statistik
         $this->filterBulan = now()->format('m');
         $this->filterKampung = null;
+        $this->filterKecamatan = null;
     }
 
     public function render()
     {
+
         $query = Religion::query();
 
         if ($this->kecamatan) {
@@ -38,19 +41,6 @@ class Index extends Component
 
         $religions = $query->paginate($this->perPage);
         $allKecamatan = Religion::select('kecamatan')->distinct()->pluck('kecamatan');
-
-        $this->chartData = [
-            'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            'datasets' => [
-                [
-                    'label' => 'Sales',
-                    'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
-                    'borderColor' => 'rgba(75, 192, 192, 1)',
-                    'borderWidth' => 1,
-                    'data' => [65, 59, 80, 81, 56, 55, 40], // Contoh data statistik
-                ]
-            ],
-        ];
 
         $statistik = Religion::Select(
                 'kecamatan',
@@ -83,41 +73,52 @@ class Index extends Component
             ];
         });
 
-        // dd($statistikPerKecamatan);
+        $kampungs = Religion::select('kampung')->distinct()->pluck('kampung');
+        $statistikPerKampung = $this->getStatistikPerKampung();
+        $kecamatans = Religion::pluck('kecamatan')->unique();
+        // dd($kecamatans);
         
         return view('livewire.guest.statistik-agama.index', [
             'religions' => $religions,
             'kecamatans' => $allKecamatan,
-            'statistikPerKecamatan' => $statistikPerKecamatan
+            'statistikPerKecamatan' => $statistikPerKecamatan,
+            'kampungs' => $kampungs,
+            'statistikPerKampung' => $statistikPerKampung,
+            'kecamatanss' => $kecamatans
         ]);
     }
 
-    protected function getStatistikPerKecamatan()
+    protected function getStatistikPerKampung()
     {
-        // Ambil data berdasarkan filter bulan dan kampung
-        $query = Religion::whereMonth('bulan', $this->filterBulan);
-
-        if ($this->filterKampung) {
-            $query->where('kampung', $this->filterKampung);
-        }
-
-        $data = $query->get();
-
-        return $data->groupBy('kecamatan')
-            ->map(function ($group, $kecamatan) {
+        return Religion::when($this->filterKecamatan, function ($query) {
+                return $query->where('kecamatan', $this->filterKecamatan);
+            })
+            ->get()
+            ->groupBy('kampung')
+            ->map(function ($items, $kampung) {
                 return [
-                    'total_mesjid' => $group->sum('masjid'),
-                    'total_gereja_kristen' => $group->sum('gereja_kristen'),
-                    'total_gereja_khatolik' => $group->sum('gereja_khatolik'),
-                    'total_pura' => $group->sum('pura'),
-                    'total_wihara' => $group->sum('wihara'),
-                    'total_klenteng' => $group->sum('klenteng'),
-                    'total_rumah_tahfiz' => $group->sum('rumah_tahfiz'),
-                    'total_kapel' => $group->sum('kapel'),
-                    'total_balai_basarah' => $group->sum('balai_basarah'),
-                    'total_surau' => $group->sum('surau'),
+                    'total_mesjid' => $items->sum('masjid'),
+                    'total_gereja_kristen' => $items->sum('gereja_kristen'),
+                    'total_gereja_khatolik' => $items->sum('gereja_khatolik'),
+                    'total_pura' => $items->sum('pura'),
+                    'total_wihara' => $items->sum('wihara'),
+                    'total_klenteng' => $items->sum('klenteng'),
+                    'total_rumah_tahfiz' => $items->sum('rumah_tahfiz'),
+                    'total_kapel' => $items->sum('kapel'),
+                    'total_balai_basarah' => $items->sum('balai_basarah'),
+                    'total_surau' => $items->sum('surau'),
+                    'kecamatan' => $items->first()->kecamatan,
                 ];
             });
+    }
+
+    public function updatedFilterKecamatan()
+    {
+        // Update data saat filterKecamatan berubah
+        // $this->emit('updatedStatistikPerKampung', $this->getStatistikPerKampung());
+        $this->dispatch('updatedStatistikPerKampung', detail: [
+            'data' => $this->getStatistikPerKampung()
+        ]);
     }
 }
 

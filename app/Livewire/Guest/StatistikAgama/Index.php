@@ -17,80 +17,43 @@ class Index extends Component
     public $kampungs;
     public $filterKecamatan;
 
+    // public $kecamatanss;
+    public $kampungss = [];
+    public $selectedKecamatan = null;
+    public $selectedKampung = null;
+    // public $religions = [];
+
+    protected $paginationTheme = 'tailwind';
+
     public function mount()
     {
         $this->kampungs = Religion::distinct()->pluck('kampung'); // Ambil semua kampung yang unik dari tabel statistik
         $this->filterBulan = now()->format('m');
         $this->filterKampung = null;
         $this->filterKecamatan = 'Siak';
+        // $this->religions = Religion::all();
     }
 
-    public function render()
+    public function updatedSelectedKecamatan($value)
     {
-
-        $query = Religion::query();
-
-        if ($this->kecamatan) {
-            $query->where('kecamatan', $this->kecamatan);
+        if ($value) {
+            $this->kampungss = Religion::where('kecamatan', $value)->pluck('kampung');
+            $this->selectedKampung = null;
+            $this->resetPage(); // Reset pagination ketika filter diubah
+        } else {
+            $this->kampungss = [];
+            $this->resetPage(); // Reset pagination ketika filter diubah
         }
+    }
 
-        if ($this->start_date) {
-            $month = date('m', strtotime($this->start_date)); // Extract the month
-            $query->whereMonth('bulan', '=', $month);
-        }
-
-        $religions = $query->paginate($this->perPage);
-        $allKecamatan = Religion::select('kecamatan')->distinct()->pluck('kecamatan');
-
-        $statistik = Religion::Select(
-                'kecamatan',
-                'masjid',
-                'gereja_kristen',
-                'gereja_khatolik',
-                'pura',
-                'wihara',
-                'klenteng',
-                'rumah_tahfiz',
-                'kapel',
-                'balai_basarah',
-                'surau',
-            )
-            // ->whereMonth('bulan', '=', $this->filterBulan)
-            ->get();
-
-        $statistikPerKecamatan = $statistik->groupBy('kecamatan')->map(function ($group) {
-            return [
-                'total_mesjid' => $group->sum('masjid'),
-                'total_gereja_kristen' => $group->sum('gereja_kristen'),
-                'total_gereja_khatolik' => $group->sum('gereja_khatolik'),
-                'total_pura' => $group->sum('pura'),
-                'total_wihara' => $group->sum('wihara'),
-                'total_klenteng' => $group->sum('klenteng'),
-                'total_rumah_tahfiz' => $group->sum('rumah_tahfiz'),
-                'total_kapel' => $group->sum('kapel'),
-                'total_balai_basarah' => $group->sum('balai_basarah'),
-                'total_surau' => $group->sum('surau'),
-            ];
-        });
-
-        $kampungs = Religion::select('kampung')->distinct()->pluck('kampung');
-        $statistikPerKampung = $this->getStatistikPerKampung();
-        $kecamatans = Religion::pluck('kecamatan')->unique();
-        // dd($kecamatans);
-        
-        return view('livewire.guest.statistik-agama.index', [
-            'religions' => $religions,
-            'kecamatans' => $allKecamatan,
-            'statistikPerKecamatan' => $statistikPerKecamatan,
-            'kampungs' => $kampungs,
-            'statistikPerKampung' => $statistikPerKampung,
-            'kecamatanss' => $kecamatans
-        ]);
+    public function updatedSelectedKampung($value)
+    {
+        $this->resetPage();
     }
 
     protected function getStatistikPerKampung()
     {
-        return Religion::when($this->filterKecamatan, function ($query) {
+        return Religion::whereMonth('bulan', $this->filterBulan)->when($this->filterKecamatan, function ($query) {
                 return $query->where('kecamatan', $this->filterKecamatan);
             })
             ->get()
@@ -119,5 +82,79 @@ class Index extends Component
             'data' => $this->getStatistikPerKampung()
         ]);
     }
+
+    public function render()
+    {
+
+        $query = Religion::query();
+
+        if ($this->kecamatan) {
+            $query->where('kecamatan', $this->kecamatan);
+        }
+        
+
+        if ($this->start_date) {
+            $month = date('m', strtotime($this->start_date)); // Extract the month
+            $query->whereMonth('bulan', '=', $month);
+        }
+
+        if ($this->selectedKecamatan) {
+            $query->where('kecamatan', $this->selectedKecamatan);
+        }
+
+        if ($this->selectedKampung) {
+            $query->where('kampung', $this->selectedKampung);
+        }
+
+        $religions = $query->paginate($this->perPage);
+        // $allKecamatan = Religion::select('kecamatan')->distinct()->pluck('kecamatan');
+
+        $statistik = Religion::Select(
+                'kecamatan',
+                'masjid',
+                'gereja_kristen',
+                'gereja_khatolik',
+                'pura',
+                'wihara',
+                'klenteng',
+                'rumah_tahfiz',
+                'kapel',
+                'balai_basarah',
+                'surau',
+            )
+            ->whereMonth('bulan', '=', $this->filterBulan)
+            ->get();
+
+        $statistikPerKecamatan = $statistik->groupBy('kecamatan')->map(function ($group) {
+            return [
+                'total_mesjid' => $group->sum('masjid'),
+                'total_gereja_kristen' => $group->sum('gereja_kristen'),
+                'total_gereja_khatolik' => $group->sum('gereja_khatolik'),
+                'total_pura' => $group->sum('pura'),
+                'total_wihara' => $group->sum('wihara'),
+                'total_klenteng' => $group->sum('klenteng'),
+                'total_rumah_tahfiz' => $group->sum('rumah_tahfiz'),
+                'total_kapel' => $group->sum('kapel'),
+                'total_balai_basarah' => $group->sum('balai_basarah'),
+                'total_surau' => $group->sum('surau'),
+            ];
+        });
+
+        $kampungs = Religion::select('kampung')->distinct()->pluck('kampung');
+        $statistikPerKampung = $this->getStatistikPerKampung();
+        $kecamatans = Religion::pluck('kecamatan')->unique();
+        $kecamatanList = Religion::distinct()->pluck('kecamatan');
+        return view('livewire.guest.statistik-agama.index', [
+            'religions' => $religions,
+            'kecamatans' => $kecamatans,
+            'statistikPerKecamatan' => $statistikPerKecamatan,
+            'kampungs' => $kampungs,
+            'statistikPerKampung' => $statistikPerKampung,
+            'kecamatanss' => $kecamatanList,
+            'kecamatanList' => $kecamatanList,
+        ]);
+    }
+
+    
 }
 

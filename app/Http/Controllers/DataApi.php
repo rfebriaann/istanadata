@@ -17,6 +17,7 @@ class DataApi extends Controller
         $responseAPI = Http::withToken("10a0198c3a18399256cfdc7e487b235e")->get('https://sipd.go.id/sipd_api/rkpd/get_rkpd_skpd?kodepemda=1408&tahun=2024');
         $data = json_decode($responseAPI, true);
         
+        // total data
         $responseWaliData = Http::withToken("ea2959910af02481537d63df9c5c8385")->get('https://siakkab.sipd.go.id/ewalidata/serv/get_dssd?kodepemda=1408');
         $dataWaliData = json_decode($responseWaliData, true);
         

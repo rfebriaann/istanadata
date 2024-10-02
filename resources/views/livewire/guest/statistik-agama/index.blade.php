@@ -58,17 +58,27 @@
                             </div>
                         </div>
                         <div class="flex space-x-3">
-                            <div class="flex space-x-3 items-center">
-                                <label class="w-40 text-sm font-medium text-gray-900">Kecamatan :</label>
-                                <select 
-                                wire:model.live = 'kecamatan'
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
-                                    <option value="">Semua Kecamatan</option>
-                                    @foreach($kecamatans as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                            <div class="mb-4">
+                                <label for="kecamatan">Pilih Kecamatan:</label>
+                                <select wire:model.live="selectedKecamatan" id="kecamatan" class="border p-2">
+                                    <option value="">-- Pilih Kecamatan --</option>
+                                    @foreach($kecamatanList as $kec)
+                                        <option value="{{ $kec }}">{{ $kec }}</option>
                                     @endforeach
                                 </select>
                             </div>
+                        
+                            @if (!is_null($selectedKecamatan))
+                                <div class="mb-4">
+                                    <label for="kampung">Pilih Kampung:</label>
+                                    <select wire:model.live="selectedKampung" id="kampung" class="border p-2">
+                                        <option value="">-- Pilih Kampung --</option>
+                                        @foreach($kampungss as $kamp)
+                                            <option value="{{ $kamp }}">{{ $kamp }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="overflow-x-auto">
@@ -97,9 +107,9 @@
                                 @php
                                     $i = 1;
                                 @endphp
-                                @foreach ($religions as $item)
+                                @foreach ($religions as $i => $item)
                                 <tr class="border-b dark:border-gray-200">
-                                        <td class="px-4 py-3">{{$i++}}</td>
+                                        <td class="px-4 py-3">{{$i+1}}</td>
                                         {{-- <td class="px-4 py-3 text-blue-500"><span class="bg-[#0365FE]/20 text-sm leading-8 text-[#0365FE] font-medium p-1 rounded-2xl px-4">{{$item->kode_daerah}}</span></td> --}}
                                         {{-- <th scope="row" class="px-6 text-left py-2 font-medium text-gray-900">{{ucwords(strtolower($item->kode_daerah))}}</th> --}}
                                         <th scope="row" class="px-6 text-left py-2 font-medium text-gray-900">{{ucwords(strtolower($item->kampung))}}</th>

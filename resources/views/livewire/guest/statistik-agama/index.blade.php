@@ -60,8 +60,8 @@
                         <div class="flex space-x-3">
                             <div class="mb-4">
                                 <label for="kecamatan">Pilih Kecamatan:</label>
-                                <select wire:model.live="selectedKecamatan" id="kecamatan" class="border p-2">
-                                    <option value="">-- Pilih Kecamatan --</option>
+                                <select wire:model.live="selectedKecamatan" id="kecamatan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <option value="">Pilih Kecamatan</option>
                                     @foreach($kecamatanList as $kec)
                                         <option value="{{ $kec }}">{{ $kec }}</option>
                                     @endforeach
@@ -71,8 +71,8 @@
                             @if (!is_null($selectedKecamatan))
                                 <div class="mb-4">
                                     <label for="kampung">Pilih Kampung:</label>
-                                    <select wire:model.live="selectedKampung" id="kampung" class="border p-2">
-                                        <option value="">-- Pilih Kampung --</option>
+                                    <select wire:model.live="selectedKampung" id="kampung" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                                        <option value="">Pilih Kampung</option>
                                         @foreach($kampungss as $kamp)
                                             <option value="{{ $kamp }}">{{ $kamp }}</option>
                                         @endforeach

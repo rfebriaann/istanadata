@@ -17,11 +17,14 @@ class Index extends Component
     public $kampungs;
     public $filterKecamatan;
 
-    // public $kecamatanss;
     public $kampungss = [];
     public $selectedKecamatan = null;
     public $selectedKampung = null;
-    // public $religions = [];
+
+    protected $queryString = [
+        'selectedKecamatan' => ['except' => ''], // Defaultnya kosong
+        'selectedKampung' => ['except' => ''],   // Defaultnya kosong
+    ];
 
     protected $paginationTheme = 'tailwind';
 
